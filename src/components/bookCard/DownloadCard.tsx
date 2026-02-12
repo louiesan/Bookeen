@@ -3,12 +3,21 @@ import type { Book } from "../../store/appStoreTypes";
 import { useAppDispatch, useAppSelector } from "../../store/storeHooks";
 import { addOrRemove } from "../../store/userSlice/user";
 import { useNavigate } from "react-router";
+import toast from "react-hot-toast";
 
 export default function DownloadCard({ book }: { book: Book }) {
   const dispatch = useAppDispatch();
   const userFav = useAppSelector((state) => state.userSlice.favorites);
   const index = userFav?.findIndex((e) => e.id === book.id);
   const navigate = useNavigate();
+  const notify = () =>
+    index === -1
+      ? toast.success("Succefully added", { duration: 2000 })
+      : toast("removed from favorites", {
+          icon: "🗑️",
+          duration: 2000,
+        });
+
   console.log(index);
 
   return (
@@ -43,7 +52,10 @@ export default function DownloadCard({ book }: { book: Book }) {
         </button>
 
         <button
-          onClick={() => dispatch(addOrRemove(book))}
+          onClick={() => {
+            dispatch(addOrRemove(book));
+            notify();
+          }}
           className="w-10 h-10 rounded-full bg-white flex items-center justify-center cursor-pointer drop-shadow-md drop-shadow-gray-400/50"
         >
           <Heart

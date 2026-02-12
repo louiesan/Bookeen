@@ -1,5 +1,6 @@
 import { BrowserRouter, Route, Routes } from "react-router";
 import "./App.css";
+import { Toaster } from "react-hot-toast";
 import MainPage from "./pages/main/MainPage";
 import Dashboard from "./pages/dashboard/Dashboard";
 import Discover from "./pages/dashsection/Discover";
@@ -12,6 +13,7 @@ import Detail from "./pages/dashsection/detailpage/Detail";
 function App() {
   return (
     <BrowserRouter>
+      <Toaster position="top-center" />
       <Routes>
         <Route path="/" element={<MainPage />} />|
         <Route path="/mydashboard" element={<Dashboard />}>

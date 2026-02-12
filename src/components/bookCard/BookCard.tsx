@@ -3,6 +3,7 @@ import type { Book } from "../../store/appStoreTypes";
 import { useAppDispatch, useAppSelector } from "../../store/storeHooks";
 import { addOrRemove } from "../../store/userSlice/user";
 import { useNavigate } from "react-router";
+import toast from "react-hot-toast";
 
 export default function BookCard({ book }: { book: Book }) {
   const dispatch = useAppDispatch();
@@ -10,6 +11,13 @@ export default function BookCard({ book }: { book: Book }) {
   const index = userFav?.findIndex((e) => e.id === book.id);
   const navigate = useNavigate();
   console.log(index);
+  const notify = () =>
+    index === -1
+      ? toast.success("Succefully added", { duration: 2000 })
+      : toast("removed from favorites", {
+          icon: "🗑️",
+          duration: 2000,
+        });
 
   return (
     <div className="bg-[#eee] w-59 xs:w-full justify-self-center py-2.5 h-full flex flex-col gap-2.5 items-center rounded-md drop-shadow-lg drop-shadow-blue-950/60 ">
@@ -37,7 +45,10 @@ export default function BookCard({ book }: { book: Book }) {
         </button>
 
         <button
-          onClick={() => dispatch(addOrRemove(book))}
+          onClick={() => {
+            dispatch(addOrRemove(book));
+            notify();
+          }}
           className="w-10 h-10 rounded-full bg-white flex items-center justify-center cursor-pointer drop-shadow-md drop-shadow-gray-400/50"
         >
           <Heart

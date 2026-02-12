@@ -1,3 +1,5 @@
+import emailjs from "@emailjs/browser";
+import toast from "react-hot-toast";
 import { useState } from "react";
 import { useSelector } from "react-redux";
 import Header from "../../components/header/Header";
@@ -11,9 +13,11 @@ import { Link } from "react-router";
 export default function MainPage() {
   const [showSignIn, setShowSignIn] = useState<boolean>(false);
   const [refresh, setRefresh] = useState<boolean>(false);
-
+  const [name, setName] = useState<string>("");
+  const [email, setEmail] = useState<string>("");
+  const [message, setMessage] = useState<string>("");
   const userState: initialState = useSelector(
-    (state: storeType) => state.userSlice
+    (state: storeType) => state.userSlice,
   );
   const styleSign: React.CSSProperties = {
     filter: showSignIn
@@ -22,6 +26,43 @@ export default function MainPage() {
     pointerEvents: showSignIn ? "none" : "auto",
   };
 
+  const service_id = "service_fcii4s3";
+  const template_id = "template_c728xuo";
+  const public_key = "e-XZWr0BIwIRVcyet";
+
+  const template_params = {
+    from_name: name,
+    from_email: email,
+    message: message,
+    to_name: "Bookeen Team",
+    title: "Readers Message",
+  };
+
+  const sendEmail = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    toast.promise(
+      emailjs
+        .send(service_id, template_id, template_params, {
+          publicKey: public_key,
+        })
+        .then(
+          () => {
+            console.log("SUCCESS!");
+            setName("");
+            setEmail("");
+            setMessage("");
+          },
+          (error) => {
+            console.log("FAILED...", error.text);
+          },
+        ),
+      {
+        loading: "Sending message...",
+        success: "Message sent successfully!",
+        error: "Failed to send message.",
+      },
+    );
+  };
   return (
     <>
       {showSignIn && (
@@ -128,8 +169,8 @@ export default function MainPage() {
                       i === 0
                         ? "drop-shadow-gray-400"
                         : i === 1
-                        ? "drop-shadow-blue-400"
-                        : "drop-shadow-red-400"
+                          ? "drop-shadow-blue-400"
+                          : "drop-shadow-red-400"
                     } text-4xl text-center bg-transparent drop-shadow-lg`}
                   >
                     {i === 0 ? "🏛️" : i === 1 ? "📖" : "📢"}
@@ -138,15 +179,15 @@ export default function MainPage() {
                     {i === 0
                       ? "Our Purpose"
                       : i === 1
-                      ? "Our Service"
-                      : "Our Community"}
+                        ? "Our Service"
+                        : "Our Community"}
                   </h3>
                   <p className="text-xs font-[Poppins] font-light text-indigo-200 text-center">
                     {i === 0
                       ? "Our mission is to provide free and equal access to information."
                       : i === 1
-                      ? "We offer a vast collection of books and community programs."
-                      : "Our passionate staff and trustees work tirelessly to serve you."}
+                        ? "We offer a vast collection of books and community programs."
+                        : "Our passionate staff and trustees work tirelessly to serve you."}
                   </p>
                 </div>
               ))}
@@ -158,7 +199,7 @@ export default function MainPage() {
             className="w-full p-2.5 grid grid-cols-1 md:grid-cols-2 gap-2.5"
           >
             <div className="w-full p-2.5 bg-gray-900 rounded-md shadow shadow-indigo-300">
-              <form className="flex flex-col items-start">
+              <form onSubmit={sendEmail} className="flex flex-col items-start">
                 <h2 className="text-indigo-300 font-[Poppins] font-bold text-2xl">
                   Have any questions?
                 </h2>
@@ -171,6 +212,8 @@ export default function MainPage() {
                 </label>
                 <input
                   id="Name"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
                   type="text"
                   className="w-full border outline outline-indigo-400 text-gray-300 font-[Karla] rounded-sm p-1.5 bg-gray-800"
                   placeholder="Enter Your Name"
@@ -184,7 +227,8 @@ export default function MainPage() {
                 </label>
                 <input
                   id="Email"
-                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                   className="w-full border outline outline-indigo-400 text-gray-300 font-[Karla] rounded-sm p-1.5 bg-gray-800"
                   placeholder="Enter Your Email"
                 />
@@ -198,6 +242,8 @@ export default function MainPage() {
                 <textarea
                   rows={4}
                   id="Message"
+                  value={message}
+                  onChange={(e) => setMessage(e.target.value)}
                   className="w-full border outline outline-indigo-400 text-gray-300 font-[Karla] rounded-sm p-1.5 bg-gray-800"
                   placeholder="Enter Your Message"
                 ></textarea>

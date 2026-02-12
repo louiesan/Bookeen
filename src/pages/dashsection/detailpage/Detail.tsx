@@ -7,6 +7,7 @@ import {
 } from "../../../store/storeHooks/index";
 import { BookText, Download, Heart, Loader2, Trash } from "lucide-react";
 import { addOrRemove } from "../../../store/userSlice/user";
+import toast from "react-hot-toast";
 import ChoseModle from "./choosemodle/ChoseModle";
 
 export default function Detail() {
@@ -18,6 +19,14 @@ export default function Detail() {
   const detailbookstatus = useAppSelector(
     (state) => state.bookSlice.oneBookStatus,
   );
+
+  const notify = () =>
+    condition === -1
+      ? toast.success("Succefully added", { duration: 2000 })
+      : toast("removed from favorites", {
+          icon: "🗑️",
+          duration: 2000,
+        });
   const [isOpen, setIsOpen] = useState(false);
   const [isDownload, setIsDownload] = useState(false);
   const style = {
@@ -110,7 +119,10 @@ export default function Detail() {
           </div>
           {condition !== -1 ? (
             <button
-              onClick={() => dispatch(addOrRemove(detailbook))}
+              onClick={() => {
+                dispatch(addOrRemove(detailbook));
+                notify();
+              }}
               className="group flex flex-row flex-nowrap gap-1.5 items-center justify-center py-1.5 px-2.5 rounded-md bg-red-400 text-white font-[Poppins] font-medium cursor-pointer hover:bg-gray-400 duration-300 ease-in"
             >
               Remove from favorites{" "}
@@ -118,7 +130,10 @@ export default function Detail() {
             </button>
           ) : (
             <button
-              onClick={() => dispatch(addOrRemove(detailbook))}
+              onClick={() => {
+                dispatch(addOrRemove(detailbook));
+                notify();
+              }}
               className="group flex flex-row flex-nowrap gap-1.5 items-center justify-center py-1.5 px-2.5 rounded-md bg-red-300 text-white font-[Poppins] font-medium cursor-pointer hover:bg-red-400 duration-300 ease-in"
             >
               Add to favorites{" "}
