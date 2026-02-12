@@ -1,0 +1,50 @@
+@import "tailwindcss";
+
+@theme {
+  --animate-showDown: showDown 2s ease-in-out forwards;
+  --animate-show: shower 0.3s ease-in-out forwards;
+  --animate-modalSlide: modalSlide 0.3s ease-in;
+  --breakpoint-xs: 30rem;
+}
+
+@keyframes showDown {
+  0% {
+    top: -450px;
+  }
+  100% {
+    top: 0px;
+  }
+}
+
+::-webkit-scrollbar {
+  width: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: rgb(77, 178, 255);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-track {
+  background-color: rgb(0, 255, 195);
+}
+
+@keyframes shower {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 100;
+  }
+}
+
+@keyframes modalSlide {
+  0% {
+    opacity: 0;
+    transform: translateY(100px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0px);
+  }
+}
